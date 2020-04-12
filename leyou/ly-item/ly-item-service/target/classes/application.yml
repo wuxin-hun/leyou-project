@@ -7,6 +7,25 @@ spring:
     url: jdbc:mysql://localhost:3306/yun6?false&serverTimezone=UTC&rewriteBatchedStatements=true
     username: root
     password: root
+  rabbitmq:
+    host: 192.168.192.136
+    username: leyou
+    password: leyou
+    virtual-host: /leyou
+#    模板给amqp使用的
+    template:
+#      重试相关的配置信息
+      retry:
+        enabled: true
+#        初始化重试周期10秒再去重试
+        initial-interval: 10000ms
+#        最大重试周期，配合上下面的2次，第一次失败10秒后执行第二次，第二次失败本来要40秒之后再执行，但是这个地方最大设置为30秒，所以第二次就不执行了
+        max-interval: 30000ms
+        multiplier: 2
+#        配置交换机，不写会默认给一个。
+      exchange: ly.item.exchange
+#        生产者确认，如果发送失败，就自动重试，
+    publisher-confirms: true
 eureka:
   client:
     service-url:

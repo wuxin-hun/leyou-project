@@ -1,0 +1,14 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: goods-web
+  thymeleaf:
+#    部署的时候提高服务器响应速度，但是给开发带来不遍，因为改变之后看不到修改，所以需要关闭缓存
+    cache: false
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+#      拉取时间
+#    registry-fetch-interval-seconds: 5

@@ -17,18 +17,23 @@ zuul:
 #  retryable: true
   routes:
 #    如果是/item/**就映射到item-serviec这个微服务中
-    item-service: /item/**
+    item-service: /item/**  #商品微服务
+    search-service: /search/**  #搜索微服务
+    user-service: /user/**  #用户微服务
+    auth-service: /auth/** #授权中心微服务
+    cart-service: /cart/** #购物车微服务
 #   下面这个配置的方法是如果地址是upload/**就映射到upload-service中，并且不去除upload这个前缀
     upload-service:
       path: /upload/**
       serviceId: upload-service
       strip-prefix: false
 ribbon:
-  ConnectTimeout: 1000 # 连接超时时间(ms)
-  ReadTimeout: 3000 # 通信超时时间(ms)
+  ConnectTimeout: 3000 # 连接超时时间(ms)
+  ReadTimeout: 60000 # 通信超时时间(ms)
 #  OkToRetryOnAllOperations: true # 是否对所有操作重试
   MaxAutoRetriesNextServer: 0 # 同一服务不同实例的重试次数
   MaxAutoRetries: 0 # 同一实例的重试次数
+
 hystrix:
   command:
     default:
@@ -36,3 +41,4 @@ hystrix:
         isolation:
           thread:
             timeoutInMillisecond: 5000 # 熔断超时时长：10000ms
+

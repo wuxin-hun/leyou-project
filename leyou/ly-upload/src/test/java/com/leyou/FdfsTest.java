@@ -3,6 +3,7 @@ package com.leyou;
 import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.domain.fdfs.ThumbImageConfig;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.List;
 
 //这两个注解是测试注解
 @RunWith(SpringRunner.class)
@@ -51,5 +54,21 @@ public class FdfsTest {
         // 获取缩略图路径
         String path = thumbImageConfig.getThumbImagePath(storePath.getPath());
         System.out.println(path);
+    }
+
+    @Test
+    public void test1(){
+
+        System.out.println(test2(Arrays.asList(1,2,3)));
+
+
+
+
+
+    }
+
+    public static List test2(List list){
+        return list;
+
     }
 }

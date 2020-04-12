@@ -1,5 +1,6 @@
 package com.leyou.item.web;
 
+import com.leyou.common.utils.JsonUtils;
 import com.leyou.common.vo.PageResult;
 import com.leyou.item.pojo.Sku;
 import com.leyou.item.pojo.Spu;
@@ -64,6 +65,7 @@ public class GoodsController {
      * 商品的修改
      * 界面在商品管理=》商品列表=》右边界面的修改选项=》最后保存提交
      * 请求路径：api.leyou.com/api/item/spu/detail/184
+     * 根据spuId查询spuDetail
      *
      * @param spuId
      * @return
@@ -71,6 +73,8 @@ public class GoodsController {
     @GetMapping("/spu/detail/{id}")
     public ResponseEntity<SpuDetail> queryDetailById(@PathVariable("id") Long spuId) {
 //        根据spu的id查询详情Detail
+        System.out.println("--------------------------------------");
+        System.out.println(JsonUtils.toString(goodService.queryDetailById(spuId)));
         return ResponseEntity.ok(goodService.queryDetailById(spuId));
     }
 
@@ -99,6 +103,20 @@ public class GoodsController {
     public ResponseEntity<Void> updateGoods(@RequestBody Spu spu) {
         goodService.updateGoods(spu);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    /**
+     * 通过skuId查询Spu的信息。在商品详情页使用。
+     * @param id
+     * @return
+     */
+    @GetMapping("{id}")
+    public ResponseEntity<Spu> querySpuById(@PathVariable("id")Long id){
+        Spu spu = this.goodService.querySpuById(id);
+        if(spu==null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(spu);
     }
 
 }

@@ -6,6 +6,7 @@ import com.leyou.item.service.SpecificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public class SpecificationController {
      */
     //这个地方的request请求是api.leyou.com/api/item/spec/params?gid=1所以这个地方是用问号拼接的没有使用路径占位符
     // 不能像上面那种用@PathVariable取到参数
-//
+
     @GetMapping("params")
     public ResponseEntity<List<SpecParam>> queryParamList(
             //三个字段可以用也可以不用，一个根据gid组查询，一个根据cid查询，根据是否要求所查询
@@ -60,6 +61,20 @@ public class SpecificationController {
             @RequestParam(value = "cid" ,required = false) Long cid,
             @RequestParam(value = "searching", required = false) Boolean searching){
         return ResponseEntity.ok(specService.queryParamList(gid,cid,searching));
+    }
+
+    /**
+     * 根据id查询组内的group的信息
+     * @param cid
+     * @return
+     */
+    @GetMapping("group/param/{cid}")
+    public ResponseEntity<List<SpecGroup>> queryGroupsWithParam(@PathVariable("cid")Long cid){
+        List<SpecGroup> groups = specService.queryGroupsWithParam(cid);
+        if(CollectionUtils.isEmpty(groups)){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(groups);
     }
 
 }

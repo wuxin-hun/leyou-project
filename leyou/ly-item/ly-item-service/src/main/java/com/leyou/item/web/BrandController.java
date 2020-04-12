@@ -3,10 +3,10 @@ package com.leyou.item.web;
 import com.leyou.common.vo.PageResult;
 import com.leyou.item.pojo.Brand;
 import com.leyou.item.service.BrandService;
-import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,12 +41,10 @@ public class BrandController {
     ) {
         return ResponseEntity.ok(brandService.queryBrandByPage(page, rows, sortBy, desc, key));
     }
-    /*
-    这个地方一共从chromeF12中一共接收四个参数，前三个参数在Brand的实体类里面有可以用他来接收，后面的cid是没有的的所以要用一个List
-    来接收，但是由于cid是21,41这样子，所以需要用List来接受，然后用@RequestParam这个来解析这个参数通过springmvc来传入到cids中
-     */
     /**
      * 品牌管理中 => 新增品牌接口
+     *     这个地方一共从chromeF12中一共接收四个参数，前三个参数在Brand的实体类里面有可以用他来接收，后面的cid是没有的的所以要用一个List
+     *     来接收，但是由于cid是21,41这样子，所以需要用List来接受，然后用@RequestParam这个来解析这个参数通过springmvc来传入到cids中
      * @param brand
      * @param cids
      * @return
@@ -67,5 +65,15 @@ public class BrandController {
     @GetMapping("/cid/{cid}")
     public ResponseEntity<List<Brand>> queryBrandByCid(@PathVariable("cid") Long cid){
         return ResponseEntity.ok(brandService.queryBrandByCid(cid));
+    }
+
+    /**
+     * 根据id查询品牌
+     * @param id
+     * @return
+     */
+    @GetMapping("{id}")
+    public ResponseEntity<Brand> queryBrandById(@PathVariable("id") Long id){
+        return ResponseEntity.ok(brandService.queryById(id));
     }
 }

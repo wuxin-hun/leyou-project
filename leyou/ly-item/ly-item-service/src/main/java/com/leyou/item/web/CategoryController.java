@@ -27,14 +27,25 @@ public class CategoryController {
 
     /**
      * 根据父节点查询商品分类
+     *
      * @param pid
-     * @return
-     * 返回值不用List因为使用RESTful风格编程
+     * @return 返回值不用List因为使用RESTful风格编程
      */
     @GetMapping("list")
-    public ResponseEntity<List<Category>> queryCategoryByPid(@RequestParam("pid") Long pid){
+    public ResponseEntity<List<Category>> queryCategoryByPid(@RequestParam("pid") Long pid) {
 //        下面两种都可以
 //        return ResponseEntity.status(HttpStatus.OK).body(null);
         return ResponseEntity.ok(categoryService.queryCategoryListByPid(pid));
+    }
+
+    /**
+     * 根据id查询商品分类接口
+     *
+     * @param ids
+     * @return
+     */
+    @GetMapping("list/ids")
+    public ResponseEntity<List<Category>> queryCategoryByIds(@RequestParam("ids") List<Long> ids) {
+        return ResponseEntity.ok(categoryService.queryByIds(ids));
     }
 }

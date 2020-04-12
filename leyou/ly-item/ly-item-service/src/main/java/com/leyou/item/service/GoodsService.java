@@ -4,11 +4,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.leyou.common.enums.ExceptionEnum;
 import com.leyou.common.exception.LyException;
+import com.leyou.common.utils.JsonUtils;
 import com.leyou.common.vo.PageResult;
 import com.leyou.item.mapper.*;
 import com.leyou.item.pojo.*;
 import com.netflix.discovery.converters.Auto;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +48,9 @@ public class GoodsService {
     @Autowired
     private StockMapper stockMapper;
 
+    @Autowired
+    private AmqpTemplate amqpTemplate;
+
 
     public PageResult<Spu> querySpuByPage(Integer page, Integer rows, Boolean saleable, String key) {
 //        分页
@@ -75,7 +80,6 @@ public class GoodsService {
         loadCategoryAndBrandName(spus);
 //        解析分页结果
         PageInfo<Spu> info = new PageInfo<>(spus);
-
         return new PageResult<>(info.getTotal(), spus);
     }
 
@@ -135,6 +139,9 @@ public class GoodsService {
 //    批量新增库存，调用stockMapper
         stockMapper.insertList(stockList);
 
+//        新增，删除修改都需要给mq发送消息。如果不想对代码有影响的话还可以try,catch。发消息代码就写完了。
+        amqpTemplate.convertAndSend("item-insert",spu.getId());
+
     }
 
 
@@ -143,7 +150,7 @@ public class GoodsService {
         if (detail == null) {
             throw new LyException(ExceptionEnum.PRICE_COUNT_BE_NULL);
         }
-        return null;
+        return detail;
     }
 
     public List<Sku> querySkuBySpuId(Long spuId) {
@@ -208,6 +215,10 @@ public class GoodsService {
         }
 //        新增sku和stock
         saveSkuAndStock(spu);
+
+//        在商品修改之后发送消息给mq，一行代码即可。
+        amqpTemplate.convertAndSend("item.update",spu.getId());
+
     }
 
     @Transactional
@@ -241,4 +252,7 @@ public class GoodsService {
 
     }
 
+    public Spu querySpuById(Long id) {
+        return this.spuMapper.selectByPrimaryKey(id);
+    }
 }

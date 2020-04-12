@@ -5,6 +5,8 @@ import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.List;
 
 /**
  * @Description 这一个实体类对应的也是没有完整的数据，只有手机一栏有数据
@@ -20,5 +22,9 @@ public class SpecGroup {
     private Long id;
     private Long cid;
     private String name;
+
+    @Transient
+    private List<SpecParam> params;
+
 
 }

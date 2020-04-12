@@ -61,4 +61,26 @@ public class SpecificationService {
         return list;
 
     }
+
+    public List<SpecParam> queryParams(Long id,Long cid,Boolean generic,Boolean searching){
+        SpecParam record = new SpecParam();
+        record.setGroupId(id);
+        record.setCid(cid);
+        record.setGeneric(generic);
+        record.setSearching(searching);
+        return this.paramMapper.select(record);
+
+    }
+
+
+
+    public List<SpecGroup> queryGroupsWithParam(Long cid) {
+//        首先查询groupid，然后根据ｇｒｏｕｐｉｄ查询组内的信息
+        List<SpecGroup> groups = this.queryGroupByCid(cid);
+        groups.forEach(group->{
+            List<SpecParam> params = this.queryParams(group.getId(),null,null,null);
+            group.setParams(params);
+        });
+        return groups;
+    }
 }

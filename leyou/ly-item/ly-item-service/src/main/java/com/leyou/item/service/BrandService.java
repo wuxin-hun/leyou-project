@@ -100,7 +100,9 @@ public class BrandService {
 
 //    传入id
     public Brand queryById(Long id){
+        System.out.println("-------------------------查询的id是"+id);
         Brand brand = brandMapper.selectByPrimaryKey(id);
+        System.out.println("查询的brand是"+brand.toString());
         if(brand==null){
             throw  new LyException(ExceptionEnum.BRAND_NOT_FOUND);
         }
